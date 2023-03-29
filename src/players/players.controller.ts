@@ -1,35 +1,44 @@
-import { Controller } from '@nestjs/common';
-import { Body, Delete, Get, Post, Query } from '@nestjs/common/decorators';
+import { Controller, ValidationPipe } from '@nestjs/common';
+import { Body, Delete, Get, Param, Post, Put, Query, UsePipes } from '@nestjs/common/decorators';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { CreatePlayerDTO } from './dtos/create-player.dto';
+import { UpdatePlayerDTO } from './dtos/update-player.dto';
 import { Player } from './interfaces/player.interface';
+import PlayersParametersValidation from '../comons/pipes/parameters-validation.pipe';
 import { PlayersService } from './players.service';
 
 @Controller('api/v1/players')
 export class PlayersController {
 
-  constructor(private readonly _playersService: PlayersService) { }
+  constructor(private readonly playersService: PlayersService) { }
 
   @Post()
-  async CreateUpdatePlayer(@Body() playerDto: CreatePlayerDTO) {
-    this._playersService.CreateUpdatePlayer(playerDto)
+  @UsePipes(ValidationPipe)
+  async createPlayer(@Body() createPlayerDto: CreatePlayerDTO) {
+    await this.playersService.createPlayer(createPlayerDto)
   }
 
-  @Get('/findBy')
-  async GetByEmail(@Query('email') email: string): Promise<Player> {
-    if (email.trim().length == 0) throw new BadRequestException('Invalid email...')
-    return this._playersService.GetByEmail(email)
+  @Put('/:id')
+  async updatePlayer(
+    @Body() updatePlayerDto: UpdatePlayerDTO,
+    @Param('id', PlayersParametersValidation) id: string
+  ): Promise<void> {
+    await this.playersService.updatePlayer(id, updatePlayerDto)
+  }
+
+  @Get('/:id')
+  async getById(@Param('id', PlayersParametersValidation) id: string): Promise<Player> {
+    return await this.playersService.getById(id)
   }
 
   @Get()
-  async GetAllPlayers(): Promise<Player[]> {
-    return this._playersService.GetAllPlayers()
+  async getAllPlayers(): Promise<Player[]> {
+    return await this.playersService.getAllPlayers()
   }
 
-  @Delete()
-  async DeletePlayer(@Query('email') email: string): Promise<void> {
-    if (email.trim().length == 0) throw new BadRequestException('Invalid email...')
-    this._playersService.DeletePlayer(email)
+  @Delete('/:id')
+  async DeletePlayer(@Param('id', PlayersParametersValidation) id: string): Promise<void> {
+    await this.playersService.deletePlayer(id)
   }
 
 }

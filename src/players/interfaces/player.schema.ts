@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
+import { Schema } from 'mongoose'
 
 export const PlayerSchema = new Schema({
   phoneNumber: {
