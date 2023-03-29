@@ -16,37 +16,38 @@ export class CategoriesService {
     private readonly playersServices: PlayersService
   ) { }
 
-  async Create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     const { category } = createCategoryDto
     const verifyCategory: Category = await this.categoryModel.findOne({ category })
     if (verifyCategory) throw new BadRequestException('Category already registered')
     const newCategory: Category = new this.categoryModel(createCategoryDto)
-    return await newCategory.save()
+    await newCategory.save()
+    return newCategory
   }
 
-  async GetAll(): Promise<Array<Category>> {
+  async getAll(): Promise<Array<Category>> {
     return await this.categoryModel.find().populate('players')
   }
 
-  async GetById(id: string): Promise<Category> {
+  async getById(id: string): Promise<Category> {
     const category: Category = await this.categoryModel.findOne({ _id: id })
     if (!category) throw new NotFoundException('Category not found')
     return category
   }
 
-  async Update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<void> {
+  async update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<void> {
     const category: Category = await this.categoryModel.findOne({ _id: id })
     if (!category) throw new NotFoundException('Category not found')
     await this.categoryModel.findOneAndUpdate({ _id: id }, { $set: updateCategoryDto })
   }
 
-  async Delete(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const category: Category = await this.categoryModel.findOne({ _id: id })
     if (!category) throw new NotFoundException('Category not found')
     await this.categoryModel.deleteOne({ _id: id })
   }
 
-  async AssignCategoryPlayer(categoryId: string, playerId: string): Promise<void> {
+  async assignCategoryPlayer(categoryId: string, playerId: string): Promise<void> {
     const category: Category = await this.categoryModel.findOne({ _id: categoryId })
     const player: Player = await this.playersServices.getById(playerId)
 
@@ -57,4 +58,21 @@ export class CategoriesService {
     category.players.push(playerId)
     await this.categoryModel.findByIdAndUpdate({ _id: categoryId }, { $set: category })
   }
+
+  async getPlayerCategory(id: string): Promise<Category> {
+    const player = await this.playersServices.getById(id)
+
+    if (!player) {
+      throw new BadRequestException('Player not found')
+    }
+
+    const category = await this.categoryModel.findOne({ players: player })
+
+    if (!category) {
+      throw new BadRequestException('Category not found')
+    }
+
+    return category
+  }
+
 }

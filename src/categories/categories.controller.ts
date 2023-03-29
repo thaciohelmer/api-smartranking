@@ -11,39 +11,44 @@ export class CategoriesController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async CreateCategory(@Body() createCategoryDto: CreateCategoryDto): Promise<Category> {
-    return await this.categoryService.Create(createCategoryDto)
+  async createCategory(@Body() createCategoryDto: CreateCategoryDto): Promise<Category> {
+    return await this.categoryService.create(createCategoryDto)
   }
 
   @Get()
-  async GetAllCategories(): Promise<Array<Category>> {
-    return await this.categoryService.GetAll()
+  async getAllCategories(): Promise<Array<Category>> {
+    return await this.categoryService.getAll()
   }
 
   @Get('/:id')
-  async GetById(@Param('id') id: string): Promise<Category> {
-    return await this.categoryService.GetById(id)
+  async getById(@Param('id') id: string): Promise<Category> {
+    return await this.categoryService.getById(id)
   }
 
   @Put('/:id')
   @UsePipes(ValidationPipe)
-  async Update(
+  async update(
     @Body() updateCategoryDto: UpdateCategoryDto,
     @Param('id') id: string
   ): Promise<void> {
-    return await this.categoryService.Update(id, updateCategoryDto)
+    return await this.categoryService.update(id, updateCategoryDto)
   }
 
   @Delete('/:id')
-  async DeleteCategory(@Param('id') id: string): Promise<void> {
-    return await this.categoryService.Delete(id)
+  async deleteCategory(@Param('id') id: string): Promise<void> {
+    return await this.categoryService.delete(id)
   }
 
   @Post('/:categoryId/player/:playerId')
-  async AssignCategoryPlayer(@Param() params: string[]): Promise<void> {
+  async assignCategoryPlayer(@Param() params: string[]): Promise<void> {
     const categoryId: string = params['categoryId']
     const playerId: string = params['playerId']
-    return await this.categoryService.AssignCategoryPlayer(categoryId, playerId)
+    return await this.categoryService.assignCategoryPlayer(categoryId, playerId)
+  }
+
+  @Get('/category/:player')
+  async getPlayerCategory(@Param('player') id: string): Promise<Category> {
+    return this.categoryService.getPlayerCategory(id)
   }
 
 }
