@@ -21,6 +21,7 @@ export class PlayersService {
     }
 
     const player: Player = new this.playerModel(createPlayerDTO)
+    player.ranking = 'C'
     await player.save()
 
     return player

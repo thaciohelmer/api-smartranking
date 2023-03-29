@@ -5,9 +5,9 @@ import { ChallengeStatus } from "./challenge-status.enum";
 export interface Challenge extends Document {
   status: ChallengeStatus
   requester: string
-  challengeDate: string
-  requestDate: string
-  responseDate: string
+  challengeDate: Date
+  requestDate: Date
+  responseDate: Date
   category: string
   players: Array<string>
   match: Match
