@@ -1,4 +1,4 @@
-import { ArgumentMetadata, BadRequestException, PipeTransform } from "@nestjs/common";
+import { BadRequestException, PipeTransform } from "@nestjs/common";
 import { ChallengeStatus } from "../interfaces/challenge-status.enum";
 
 export class ChallengeStatusValidation implements PipeTransform {

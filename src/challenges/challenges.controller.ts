@@ -38,7 +38,7 @@ export class ChallengesController {
 
   @Delete('/:challenge/')
   async deleteChallenge(@Param('challenge') id: string): Promise<void> {
-    return this.challengesService.delete(id)
+    return await this.challengesService.delete(id)
   }
 
 }

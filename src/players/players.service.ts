@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePlayerDTO } from './dtos/create-player.dto';
 import { Player } from './interfaces/player.interface';
 import { BadRequestException, NotFoundException } from '@nestjs/common/exceptions';
@@ -43,9 +43,9 @@ export class PlayersService {
     return player
   }
 
-  async deletePlayer(id: string): Promise<any> {
+  async deletePlayer(id: string): Promise<void> {
     const verifyPlayer: Player = await this.playerModel.findOne({ _id: id })
     if (!verifyPlayer) throw new NotFoundException('Player not found')
-    return await this.playerModel.deleteOne({ _id: id })
+    await this.playerModel.deleteOne({ _id: id })
   }
 }

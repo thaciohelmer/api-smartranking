@@ -1,6 +1,5 @@
 import { Controller, ValidationPipe } from '@nestjs/common';
-import { Body, Delete, Get, Param, Post, Put, Query, UsePipes } from '@nestjs/common/decorators';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import { Body, Delete, Get, Param, Post, Put, UsePipes } from '@nestjs/common/decorators';
 import { CreatePlayerDTO } from './dtos/create-player.dto';
 import { UpdatePlayerDTO } from './dtos/update-player.dto';
 import { Player } from './interfaces/player.interface';
